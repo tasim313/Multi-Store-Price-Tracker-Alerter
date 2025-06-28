@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results | PricePulse</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .store-card {
+            transition: all 0.3s ease;
+            background: linear-gradient(to bottom right, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+        }
+        .store-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .best-deal {
+            border: 2px solid #f59e0b;
+            position: relative;
+            overflow: hidden;
+        }
+        .best-deal::after {
+            content: "Best Deal";
+            position: absolute;
+            top: 10px;
+            right: -30px;
+            background: #f59e0b;
+            color: #1f2937;
+            font-weight: bold;
+            padding: 2px 30px;
+            transform: rotate(45deg);
+            font-size: 12px;
+        }
+        .price-badge {
+            background: linear-gradient(to right, #10b981, #3b82f6);
+        }
+        .target-badge {
+            background: linear-gradient(to right, #f59e0b, #ef4444);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100">
+    <div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header Section -->
+            <div class="text-center mb-12">
+                <a href="/" class="inline-block mb-6">
+                    <span class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-400">PricePulse</span>
+                </a>
+                <h2 class="text-3xl font-bold mb-2">{{ search.name }}</h2>
+                
+                <div class="flex justify-center items-center space-x-4">
+                    <span class="target-badge text-white px-4 py-1 rounded-full text-sm font-semibold">
+                        Target: {{ search.target_price }} BDT
+                    </span>
+                    <a href="{% url 'price_chart' search.id %}" class="flex items-center text-blue-400 hover:text-blue-300 transition">
+                        <i class="fas fa-chart-line mr-1"></i> View Chart
+                    </a>
+                </div>
+            </div>
+
+            <!-- Results Grid -->
+            {% if results %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for result in results %}
+                <div class="store-card rounded-xl p-6 border border-gray-700 {% if forloop.first and best_deal %}best-deal{% endif %}" 
+                     data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1|multiply:50 }}">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <span class="text-xs font-semibold px-2 py-1 rounded 
+                                      {% if 'daraz' in result.site|lower %}bg-blue-100 text-blue-800
+                                      {% elif 'amazon' in result.site|lower %}bg-yellow-100 text-yellow-800
+                                      {% elif 'aliexpress' in result.site|lower %}bg-red-100 text-red-800
+                                      {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                {{ result.site }}
+                            </span>
+                            {% if not result.in_stock %}
+                            <span class="ml-2 text-xs font-semibold px-2 py-1 rounded bg-gray-100 text-gray-800">
+                                Out of Stock
+                            </span>
+                            {% endif %}
+                        </div>
+                        <span class="price-badge text-white px-3 py-1 rounded-full text-sm font-bold">
+                            {{ result.price }} {% if result.currency %}{{ result.currency }}{% else %}BDT{% endif %}
+                        </span>
+                    </div>
+                    
+                    <h3 class="font-medium mb-4">{{ result.title|truncatechars:60 }}</h3>
+                    
+                    <div class="flex justify-between items-center mt-6">
+                        <a href="{{ result.url }}" target="_blank" 
+                           class="flex-1 mr-2 bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg text-center transition">
+                            <i class="fas fa-external-link-alt mr-2"></i> Visit Store
+                        </a>
+                        <button class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-medium py-2 px-4 rounded-lg transition transform hover:scale-105">
+                            <i class="fas fa-bell mr-2"></i> Alert
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-12">
+                <div class="mx-auto w-24 h-24 mb-6 text-yellow-400">
+                    <i class="fas fa-search-dollar text-6xl opacity-50"></i>
+                </div>
+                <h3 class="text-xl font-medium mb-2">No prices found</h3>
+                <p class="text-gray-400 mb-6">We couldn't find any prices for this product across our supported stores.</p>
+                <a href="/" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition">
+                    <i class="fas fa-arrow-left mr-2"></i> Try Another Search
+                </a>
+            </div>
+            {% endif %}
+
+            <!-- Back Button -->
+            <div class="mt-12 text-center">
+                <a href="/" class="inline-flex items-center text-gray-400 hover:text-white transition">
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Search
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 600,
+            once: true,
+            easing: 'ease-out-quart'
+        });
+    </script>
+</body>
+</html>
