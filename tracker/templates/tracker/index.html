@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PricePulse | Multi-Store Price Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/@animxyz/core@0.6.0/dist/animxyz.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .search-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .price-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen text-white">
+    <div class="container mx-auto px-4 py-12 xyz-in" xyz="fade down-1 stagger-1">
+        <!-- Animated Header -->
+        <header class="text-center mb-12 xyz-in" xyz="fade small-100% down-5 duration-10">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-400">PricePulse</span>
+            </h1>
+            <p class="text-xl opacity-90">Track prices across multiple stores in real-time</p>
+            
+            <div class="mt-8 animate-float">
+                <i class="fas fa-search-dollar text-6xl text-yellow-300 opacity-70"></i>
+            </div>
+        </header>
+
+        <!-- Main Search Card -->
+        <div class="max-w-2xl mx-auto search-card rounded-2xl p-8 shadow-2xl xyz-in" 
+             xyz="fade small-100% up-5 duration-10">
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
+                
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium">Product Name</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-box-open text-gray-400"></i>
+                        </div>
+                        <input type="text" name="product" 
+                               class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent placeholder-gray-300" 
+                               placeholder="Sony WH-1000XM5 Headphones" required>
+                    </div>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium">Target Price (BDT)</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-bangladeshi-taka-sign text-gray-400"></i>
+                        </div>
+                        <input type="number" name="target" 
+                               class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent placeholder-gray-300" 
+                               placeholder="28000" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="w-full py-3 px-6 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 rounded-lg font-semibold text-gray-900 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    <i class="fas fa-bolt mr-2"></i> Track Prices
+                </button>
+            </form>
+        </div>
+
+        <!-- Recent Searches Section -->
+        {% if recent_searches %}
+        <div class="max-w-2xl mx-auto mt-12 xyz-in" xyz="fade small-100% up-5 duration-10 delay-3">
+            <h3 class="text-xl font-semibold mb-4 flex items-center">
+                <i class="fas fa-history mr-2"></i> Your Recent Searches
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for search in recent_searches %}
+                <a href="{% url 'results' search.id %}" class="bg-white/10 hover:bg-white/20 p-4 rounded-lg transition-all duration-300 border border-white/10 hover:border-white/20">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-medium truncate">{{ search.name }}</h4>
+                            <p class="text-sm opacity-80">{{ search.created_at|date:"M d, Y" }}</p>
+                        </div>
+                        <span class="bg-yellow-400/20 text-yellow-300 px-2 py-1 rounded text-xs font-medium">
+                            {{ search.target_price }} BDT
+                        </span>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Animated Footer -->
+        <footer class="mt-16 text-center opacity-80 text-sm xyz-in" xyz="fade small-100% up-5 duration-10 delay-5">
+            <p>Track prices from Daraz, Amazon, AliExpress, and more</p>
+            <p class="mt-2">© {% now "Y" %} PricePulse - Never overpay again</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@animxyz/core@0.6.0/dist/animxyz.min.js"></script>
+</body>
+</html>
