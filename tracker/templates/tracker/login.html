@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | PricePulse</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Custom gradient background matching the PricePulse example */
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        /* Card style with blur effect */
+        .login-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        /* Floating animation for the icon */
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen text-white flex items-center justify-center p-4">
+    <div class="container mx-auto max-w-md px-4 py-8">
+
+        <!-- Animated Header Section -->
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-400">PricePulse</span>
+            </h1>
+            <p class="text-xl opacity-90 mb-6">Welcome Back!</p>
+
+            <div class="mt-4 animate-float">
+                <i class="fas fa-user-circle text-6xl text-yellow-300 opacity-70"></i>
+            </div>
+        </header>
+
+        <!-- Login Form Card -->
+        <div class="login-card rounded-2xl p-8 shadow-2xl">
+            <h2 class="text-3xl font-semibold text-center mb-6">Login</h2>
+            <form method="post" class="space-y-6">
+
+              {% csrf_token %}
+                <!-- Username Field -->
+                <div class="space-y-2">
+                    <label for="username" class="block text-sm font-medium">Username</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-user text-gray-400"></i>
+                        </div>
+                        <input type="text" id="username" name="username"
+                               class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent placeholder-gray-300"
+                               placeholder="Your username" required>
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="space-y-2">
+                    <label for="password" class="block text-sm font-medium">Password</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-lock text-gray-400"></i>
+                        </div>
+                        <input type="password" id="password" name="password"
+                               class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent placeholder-gray-300"
+                               placeholder="Your password" required>
+                    </div>
+                </div>
+
+                <!-- Login Button -->
+                <button type="submit" class="w-full py-3 px-6 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 rounded-lg font-semibold text-gray-900 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    <i class="fas fa-sign-in-alt mr-2"></i> Login
+                </button>
+            </form>
+
+            <!-- Sign Up Link -->
+            <p class="text-center mt-6 text-opacity-80">Don't have an account?
+                <a href="signup.html" class="text-yellow-300 hover:text-yellow-400 font-medium transition">Sign up here</a>.
+            </p>
+        </div>
+
+        <!-- Animated Footer -->
+        <footer class="mt-12 text-center opacity-80 text-sm">
+            <p>Track prices from Daraz, Amazon, AliExpress, and more</p>
+            <p class="mt-2">© 2023 PricePulse - Never overpay again</p>
+        </footer>
+    </div>
+</body>
+</html>
+
