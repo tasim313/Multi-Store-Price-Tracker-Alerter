@@ -31,6 +31,24 @@
 </head>
 <body class="gradient-bg min-h-screen text-white">
     <div class="container mx-auto px-4 py-12 xyz-in" xyz="fade down-1 stagger-1">
+
+        <!-- Navigation Bar -->
+        <nav class="flex justify-end items-center space-x-4 mb-8">
+            {% if user.is_authenticated %}
+                <span class="text-sm">Hello, {{ user.username }} 👋</span>
+                <a href="{% url 'logout' %}" class="text-yellow-300 hover:text-yellow-400 font-medium transition">
+                    Logout
+                </a>
+            {% else %}
+                <a href="{% url 'signup' %}" class="text-yellow-300 hover:text-yellow-400 font-medium transition">
+                    Sign Up
+                </a>
+                <a href="{% url 'login' %}" class="text-yellow-300 hover:text-yellow-400 font-medium transition">
+                    Login
+                </a>
+            {% endif %}
+        </nav>
+        
         <!-- Animated Header -->
         <header class="text-center mb-12 xyz-in" xyz="fade small-100% down-5 duration-10">
             <h1 class="text-4xl md:text-5xl font-bold mb-4">
@@ -56,8 +74,8 @@
                             <i class="fas fa-box-open text-gray-400"></i>
                         </div>
                         <input type="text" name="product" 
-                               class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent placeholder-gray-300" 
-                               placeholder="Sony WH-1000XM5 Headphones" required>
+                                class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent placeholder-gray-300 text-gray-800" 
+                                placeholder="Sony WH-1000XM5 Headphones" required>
                     </div>
                 </div>
                 
@@ -68,8 +86,8 @@
                             <i class="fas fa-bangladeshi-taka-sign text-gray-400"></i>
                         </div>
                         <input type="number" name="target" 
-                               class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent placeholder-gray-300" 
-                               placeholder="28000" required>
+                            class="w-full pl-10 pr-4 py-3 rounded-lg bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent placeholder-gray-300 text-gray-800" 
+                            placeholder="28000" required>
                     </div>
                 </div>
                 

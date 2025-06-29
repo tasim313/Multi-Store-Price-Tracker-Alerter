@@ -8,6 +8,44 @@ from .models import ProductSearch, ProductResult
 from .tasks import scrape_all_sites
 import json
 from datetime import datetime, timedelta
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login, logout
+from .forms import SignUpForm
+
+
+
+def signup_view(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('index')
+        else:
+            messages.error(request, "Sign up failed. Please correct the errors below.")
+    else:
+        form = SignUpForm()
+    return render(request, 'tracker/signup.html', {'form': form})
+
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('index')
+        else:
+            messages.error(request, "Login failed. Please try again.")
+    else:
+        form = AuthenticationForm()
+    return render(request, 'tracker/login.html', {'form': form})
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
 
 @login_required
 def index(request):
@@ -60,7 +98,7 @@ def results(request, search_id):
 @login_required
 def price_chart_view(request, search_id):
     search = get_object_or_404(ProductSearch, id=search_id, user=request.user)
-    results = ProductResult.objects.filter(search__name=search.name).order_by('timestamp')
+    results = ProductResult.objects.filter(search=search).order_by('timestamp')
     
     # Prepare chart data
     chart_data = prepare_chart_data(results, search.target_price)
@@ -68,7 +106,8 @@ def price_chart_view(request, search_id):
     return render(request, 'tracker/chart.html', {
         'product_name': search.name,
         'target_price': search.target_price,
-        'chart_data': json.dumps(chart_data)
+        'chart_data': json.dumps(chart_data),
+        'search_id': search_id
     })
 
 @login_required

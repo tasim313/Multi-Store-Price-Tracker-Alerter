@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up | PricePulse</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- AnimXYZ -->
+    <link href="https://cdn.jsdelivr.net/npm/@animxyz/core@0.6.0/dist/animxyz.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex items-center justify-center text-white">
+
+    <div class="w-full max-w-md p-8 rounded-xl shadow-xl bg-white/10 backdrop-blur-md xyz-in" xyz="fade small-100% up-5 duration-10">
+        <h2 class="text-3xl font-bold text-center mb-6 text-yellow-300">
+            <i class="fas fa-user-plus mr-2"></i> Sign Up
+        </h2>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div>
+                <label class="block text-sm font-semibold mb-1">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <p class="text-red-300 text-sm mt-1">{{ field.errors.0 }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+            
+            <button type="submit" class="w-full py-3 px-6 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 rounded-lg font-semibold text-gray-900 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                <i class="fas fa-user-check mr-2"></i> Create Account
+            </button>
+        </form>
+
+        <p class="text-sm mt-6 text-center text-white/80">
+            Already have an account?
+            <a href="{% url 'login' %}" class="text-yellow-300 hover:underline font-medium">Login here</a>.
+        </p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@animxyz/core@0.6.0/dist/animxyz.min.js"></script>
+</body>
+</html>
+
